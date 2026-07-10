@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom/client';
 import Button from './src/components/Button';
 import ReadyPanel from './src/components/ReadyPanel';
 import AuthPanel from './src/components/AuthPanel';
 import ChatScreen from './src/components/ChatScreen';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
-export default function App() {
+function App() {
   const [minimized, setMinimized] = useState(false);
 
   if (minimized) {
@@ -36,6 +38,10 @@ export default function App() {
       <AuthPanel />
       <ReadyPanel />
       <ChatScreen />
+      <SpeedInsights />
     </div>
   );
 }
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
