@@ -28,12 +28,17 @@ export default function App() {
 
     const checkUser = async () => {
       try {
-        const { data, error } = await supabase.auth.getUser();
-        if (error) {
-          console.error('Kullanıcı kontrol hatası:', error);
-          setUser(null);
+        const { data } = await supabase.auth.getUser();
+        if (data?.user) {
+          setUser(data.user);
         } else {
-          setUser(data?.user || null);
+          const { data: anonData, error: anonError } = await supabase.auth.signInAnonymously();
+          if (anonError) {
+            console.error('Anonim oturum açma hatası:', anonError);
+            setUser(null);
+          } else {
+            setUser(anonData?.user || null);
+          }
         }
       } catch (err) {
         console.error('Auth hatası:', err);
@@ -55,10 +60,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (user && roomName && !joined) {
+    if (roomName && !joined) {
       setJoined(true);
     }
-  }, [user, roomName, joined]);
+  }, [roomName, joined]);
 
   const roomName = useMemo(() => customChannel.trim() || selectedChannel, [customChannel, selectedChannel]);
   const displayName = nickname.trim() || user?.email?.split('@')[0] || user?.id || 'Anonim';
@@ -75,15 +80,11 @@ export default function App() {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#111318', color: '#e5e7eb', fontFamily: 'Inter, system-ui, sans-serif' }}>
-      {!user || loading ? (
+      {loading ? (
         <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '24px' }}>
-          <div style={{ width: '100%', maxWidth: '520px', background: '#1f2126', border: '1px solid #2d2f33', borderRadius: '24px', padding: '32px' }}>
-            <div style={{ marginBottom: '24px', textAlign: 'center' }}>
-              <div style={{ fontSize: '28px', fontWeight: 700, color: '#ffffff' }}>Çekirdek'e Katıl</div>
-              <div style={{ color: '#9ca3af', marginTop: '10px' }}>Takma adını gir, bir kanal seç ve gerçek P2P sohbete başla.</div>
-            </div>
-            <AuthPanel onUserChange={setUser} />
-            <div style={{ marginTop: '20px', textAlign: 'center', color: '#9ca3af' }}>Giriş yapıldıktan sonra kanal seçimine devam edin.</div>
+          <div style={{ width: '100%', maxWidth: '520px', background: '#1f2126', border: '1px solid #2d2f33', borderRadius: '24px', padding: '32px', textAlign: 'center' }}>
+            <div style={{ fontSize: '28px', fontWeight: 700, color: '#ffffff' }}>Yükleniyor...</div>
+            <div style={{ color: '#9ca3af', marginTop: '10px' }}>Anonim olarak bağlanılıyor.</div>
           </div>
         </div>
       ) : !joined ? (
@@ -141,7 +142,7 @@ export default function App() {
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
                 <button
                   type="button"
-                  onClick={() => setJoined(true)}
+                  onClick={handleJoin}
                   disabled={!displayName}
                   style={{
                     flex: 1,

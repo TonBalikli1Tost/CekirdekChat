@@ -7,15 +7,24 @@ export const supabase = supabaseUrl && supabaseAnonKey
   ? createClient(supabaseUrl, supabaseAnonKey)
   : null;
 
-export async function getUserId() {
+export async function ensureAuthenticatedUser() {
+  if (!supabase) return null;
+
   try {
-    if (!supabase) return 'anon';
-    const { data, error } = await supabase.auth.signInAnonymously();
-    if (error) throw error;
-    return data?.user?.id || 'anon';
+    const { data } = await supabase.auth.getUser();
+    if (data?.user) {
+      return data.user;
+    }
+
+    const { data: anonData, error: anonError } = await supabase.auth.signInAnonymously();
+    if (anonError) {
+      console.error('Anon oturum açma hatası:', anonError);
+      return null;
+    }
+    return anonData?.user || null;
   } catch (error) {
-    console.error('Anon oturum hatası:', error);
-    return 'anon';
+    console.error('Auth işlemi hatası:', error);
+    return null;
   }
 }
 
