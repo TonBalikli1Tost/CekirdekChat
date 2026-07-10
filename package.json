@@ -8,33 +8,9 @@
     "postinstall": "cd frontend && npm install",
     "dev:frontend": "cd frontend && npm start",
     "build": "cd frontend && npm run build",
-    "build:frontend": "cd frontend && npm run build",
-    "dev:backend": "cd backend-python && python server.py",
-    "electron:build": "npm run build && electron-builder --windows --publish never",
-    "electron:start": "npm run build && electron ."
+    "build:frontend": "cd frontend && npm run build"
   },
-  "build": {
-    "appId": "com.cekirdek.chat",
-    "productName": "Çekirdek Chat",
-    "files": [
-      "frontend/dist/**/*",
-      "electron-main.js",
-      "electron-preload.js",
-      "package.json"
-    ],
-    "directories": {
-      "buildResources": "build"
-    },
-    "win": {
-      "target": ["nsis"],
-      "publish": null
-    }
-  },
-  "dependencies": {
-    "electron": "^26.0.0"
-  },
-  "devDependencies": {
-    "electron-builder": "^24.6.0"
-  },
+  "dependencies": {},
+  "devDependencies": {},
   "keywords": ["p2p", "chat", "peer", "websocket"]
 }

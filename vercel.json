@@ -1,30 +1,20 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "frontend/dist",
-  "framework": "react",
-  "env": {
-    "EXPO_PUBLIC_SUPABASE_URL": "@supabase_url",
-    "EXPO_PUBLIC_SUPABASE_ANON_KEY": "@supabase_key"
-  },
-  "functions": {
-    "api/**/*.js": {
-      "maxDuration": 60
-    }
-  },
-  "routes": [
+  "builds": [
     {
-      "handle": "filesystem"
-    },
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "frontend/dist"
+      }
+    }
+  ],
+  "routes": [
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
     },
     {
-      "src": "/cekirdek-chat/(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/(.*)",
+      "src": "^/(.*)$",
       "dest": "/index.html"
     }
   ]
