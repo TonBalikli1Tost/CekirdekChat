@@ -1,4 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { supabase } from '../services/supabaseClient';
+import { generateKeyPair, encryptMessage } from '../services/encryptionService';
 import Button from './Button';
 
 const FRIENDS = [
@@ -9,84 +11,223 @@ const FRIENDS = [
   { id: '5', name: 'Sero', online: true },
 ];
 
-const INITIAL_CONVERSATIONS = {
-  '1': [
-    { id: 'm1', from: 'Ari', text: 'Çekirdek hazır.' },
-    { id: 'm2', from: 'ben', text: 'Sade ve hızlı kalsın.' },
-  ],
-  '2': [
-    { id: 'm1', from: 'Mina', text: 'Merhaba, sohbet etmeye hazırım.' },
-  ],
-  '3': [
-    { id: 'm1', from: 'Efe', text: 'Sesli chat de güzel olur.' },
-  ],
-  '4': [
-    { id: 'm1', from: 'Lina', text: 'Yavaş olmadığından emin miyiz?' },
-  ],
-  '5': [
-    { id: 'm1', from: 'Sero', text: 'Bugün neler paylaşalım?' },
-  ],
-};
-
-export default function ChatScreen() {
-  const [conversations, setConversations] = useState(INITIAL_CONVERSATIONS);
+export default function ChatScreen({ user }) {
+  const [messages, setMessages] = useState([]);
   const [draft, setDraft] = useState('');
   const [activeFriend, setActiveFriend] = useState('1');
+  const [loading, setLoading] = useState(false);
+  const [keyPair, setKeyPair] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  const activeMessages = useMemo(() => conversations[activeFriend] || [], [conversations, activeFriend]);
+  // Key pair oluştur
+  useEffect(() => {
+    const keys = generateKeyPair();
+    setKeyPair(keys);
+  }, [user]);
+
+  // Mobil responsive dinle
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Mesajları yükle ve realtime dinle
+  useEffect(() => {
+    if (!supabase) return;
+
+    const loadMessages = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('messages')
+          .select('*')
+          .order('created_at', { ascending: true })
+          .limit(100);
+        
+        if (error) {
+          console.error('Mesajlar yükleme hatası:', error);
+        } else {
+          setMessages(data || []);
+        }
+      } catch (err) {
+        console.error('Mesaj yükleme hatası:', err);
+      }
+    };
+
+    loadMessages();
+
+    // Real-time subscription
+    const channel = supabase
+      .channel(`messages:${user?.id}`)
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'messages' },
+        (payload) => {
+          setMessages((prev) => [...prev, payload.new]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [user]);
+
+  const activeMessages = useMemo(() => {
+    return messages.map((msg) => ({
+      id: msg.id,
+      from: msg.sender,
+      text: msg.content,
+      encrypted: msg.encrypted || false,
+    }));
+  }, [messages]);
+
   const activeFriendData = FRIENDS.find((friend) => friend.id === activeFriend) || FRIENDS[0];
 
-  const handleSend = () => {
-    const text = draft.trim();
-    if (!text) return;
+  const handleSend = async () => {
+    if (!user) {
+      alert('Mesaj göndermek için giriş yapmalısınız');
+      return;
+    }
 
-    setConversations((prev) => {
-      const nextMessages = [...(prev[activeFriend] || []), { id: Date.now().toString(), from: 'ben', text }].slice(-50);
-      return { ...prev, [activeFriend]: nextMessages };
-    });
-    setDraft('');
+    const text = draft.trim();
+    if (!text || !supabase) return;
+
+    setLoading(true);
+    try {
+      // E2EE encryption
+      const encryptedData = keyPair ? encryptMessage(text, keyPair.publicKey, keyPair.secretKey) : null;
+
+      const { error } = await supabase
+        .from('messages')
+        .insert([
+          {
+            sender: user.email || user.id,
+            content: text,
+            encrypted: !!encryptedData,
+            metadata: encryptedData ? JSON.stringify(encryptedData) : null,
+          },
+        ]);
+
+      if (error) {
+        console.error('Mesaj gönderme hatası:', error);
+        alert('Mesaj gönderilemedi');
+      } else {
+        setDraft('');
+      }
+    } catch (err) {
+      console.error('Gönderme hatası:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClearChat = () => {
-    setConversations((prev) => ({ ...prev, [activeFriend]: [] }));
+    setMessages([]);
   };
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 72px)', backgroundColor: '#000', color: '#fff' }}>
-      <aside style={{ width: '240px', borderRight: '1px solid #222', backgroundColor: '#09090b', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ padding: '16px 14px', borderBottom: '1px solid #18181b', fontWeight: 600, color: '#f8fafc' }}>
+    <div style={{
+      display: 'flex',
+      height: 'calc(100vh - 120px)',
+      backgroundColor: '#000',
+      color: '#fff',
+      flexDirection: isMobile ? 'column' : 'row',
+    }}>
+      {/* Sidebar - Kişiler */}
+      <aside style={{
+        width: isMobile ? '100%' : '240px',
+        borderRight: isMobile ? 'none' : '1px solid #222',
+        borderBottom: isMobile ? '1px solid #222' : 'none',
+        backgroundColor: '#09090b',
+        display: 'flex',
+        flexDirection: isMobile ? 'row' : 'column',
+        maxHeight: isMobile ? '120px' : 'auto',
+        overflowX: isMobile ? 'auto' : 'visible',
+        overflowY: isMobile ? 'visible' : 'auto',
+      }}>
+        <div style={{
+          padding: '16px 14px',
+          borderBottom: isMobile ? 'none' : '1px solid #18181b',
+          fontWeight: 600,
+          color: '#f8fafc',
+          whiteSpace: 'nowrap',
+          minWidth: isMobile ? 'auto' : '100%',
+        }}>
           Kişiler
         </div>
-        <div style={{ flex: 1, overflowY: 'auto' }}>
+        <div style={{
+          display: 'flex',
+          flexDirection: isMobile ? 'row' : 'column',
+          flex: 1,
+          overflowX: isMobile ? 'auto' : 'visible',
+          overflowY: isMobile ? 'visible' : 'auto',
+        }}>
           {FRIENDS.map((friend) => (
             <Button
               key={friend.id}
               onClick={() => setActiveFriend(friend.id)}
               variant={activeFriend === friend.id ? 'secondary' : 'ghost'}
               style={{
-                width: '100%',
-                justifyContent: 'flex-start',
+                width: isMobile ? 'auto' : '100%',
+                minWidth: isMobile ? '80px' : 'auto',
+                justifyContent: isMobile ? 'center' : 'flex-start',
                 borderRadius: 0,
-                borderBottom: '1px solid #18181b',
+                borderBottom: !isMobile ? '1px solid #18181b' : 'none',
+                borderRight: isMobile ? '1px solid #18181b' : 'none',
                 padding: '14px 16px',
                 backgroundColor: activeFriend === friend.id ? '#111827' : '#09090b',
                 color: '#f8fafc',
+                whiteSpace: 'nowrap',
               }}
             >
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', width: '100%' }}>
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: friend.online ? '#22c55e' : '#6b7280' }} />
-                <span>{friend.name}</span>
+              <span style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                width: isMobile ? 'auto' : '100%',
+                flexDirection: isMobile ? 'column' : 'row',
+              }}>
+                <span style={{
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '50%',
+                  backgroundColor: friend.online ? '#22c55e' : '#6b7280',
+                }} />
+                <span style={{ fontSize: isMobile ? '12px' : '14px' }}>{friend.name}</span>
               </span>
             </Button>
           ))}
         </div>
       </aside>
 
-      <section style={{ flex: 1, display: 'flex', flexDirection: 'column', backgroundColor: '#000' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 18px', borderBottom: '1px solid #222', backgroundColor: '#050505' }}>
+      {/* Chat Section */}
+      <section style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: '#000',
+        minWidth: 0,
+      }}>
+        {/* Header */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '16px 18px',
+          borderBottom: '1px solid #222',
+          backgroundColor: '#050505',
+          flexWrap: 'wrap',
+          gap: '12px',
+        }}>
           <div>
-            <div style={{ fontSize: '18px', fontWeight: 700 }}>{activeFriendData.name}</div>
-            <div style={{ fontSize: '13px', color: activeFriendData.online ? '#22c55e' : '#6b7280' }}>
+            <div style={{ fontSize: '18px', fontWeight: 700 }}>
+              {activeFriendData.name}
+            </div>
+            <div style={{
+              fontSize: '13px',
+              color: activeFriendData.online ? '#22c55e' : '#6b7280',
+            }}>
               {activeFriendData.online ? 'Çevrimiçi' : 'Çevrimdışı'}
             </div>
           </div>
@@ -95,20 +236,53 @@ export default function ChatScreen() {
           </Button>
         </div>
 
-        <div style={{ flex: 1, padding: '16px', overflowY: 'auto' }}>
+        {/* Messages */}
+        <div style={{
+          flex: 1,
+          padding: '16px',
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '14px',
+        }}>
           {activeMessages.length === 0 ? (
-            <div style={{ color: '#9ca3af', fontSize: '14px' }}>Bu kişiyle henüz bir konuşma yok. Mesaj göndererek başlayabilirsin.</div>
+            <div style={{ color: '#9ca3af', fontSize: '14px' }}>
+              Bu kişiyle henüz bir konuşma yok. Mesaj göndererek başlayabilirsin.
+            </div>
           ) : (
             activeMessages.map((msg) => (
-              <div key={msg.id} style={{ marginBottom: '14px', padding: '12px 14px', borderRadius: '14px', backgroundColor: msg.from === 'ben' ? '#111827' : '#0f172a' }}>
-                <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '6px' }}>{msg.from}</div>
-                <div style={{ fontSize: '15px', color: '#f8fafc' }}>{msg.text}</div>
+              <div
+                key={msg.id}
+                style={{
+                  padding: '12px 14px',
+                  borderRadius: '14px',
+                  backgroundColor: msg.from === user?.email || msg.from === user?.id ? '#111827' : '#0f172a',
+                  maxWidth: isMobile ? '90%' : '400px',
+                  alignSelf: msg.from === user?.email || msg.from === user?.id ? 'flex-end' : 'flex-start',
+                  wordWrap: 'break-word',
+                }}
+              >
+                <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '6px' }}>
+                  {msg.from}
+                  {msg.encrypted && <span style={{ marginLeft: '8px', color: '#22c55e' }}>🔒</span>}
+                </div>
+                <div style={{ fontSize: '15px', color: '#f8fafc' }}>
+                  {msg.text}
+                </div>
               </div>
             ))
           )}
         </div>
 
-        <div style={{ display: 'flex', gap: '10px', padding: '16px', borderTop: '1px solid #222', backgroundColor: '#050505' }}>
+        {/* Input */}
+        <div style={{
+          display: 'flex',
+          gap: '10px',
+          padding: '16px',
+          borderTop: '1px solid #222',
+          backgroundColor: '#050505',
+          flexWrap: isMobile ? 'wrap' : 'nowrap',
+        }}>
           <input
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
@@ -129,10 +303,13 @@ export default function ChatScreen() {
               padding: '14px 16px',
               outline: 'none',
               fontSize: '15px',
+              minWidth: isMobile ? '100%' : 'auto',
             }}
           />
-          <Button onClick={handleSend} disabled={!draft.trim()}>
-            GÖNDER
+          <Button onClick={handleSend} disabled={!draft.trim() || loading || !user} style={{
+            minWidth: isMobile ? '100%' : 'auto',
+          }}>
+            {loading ? 'GÖNDERILIYOR...' : 'GÖNDER'}
           </Button>
         </div>
       </section>

@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const envPath = path.resolve(__dirname, '.env');
 const envFile = fs.existsSync(envPath) ? dotenv.parse(fs.readFileSync(envPath)) : {};
@@ -16,7 +17,8 @@ const envDefinitions = Object.entries(env).reduce((defs, [key, value]) => {
 }, {});
 
 module.exports = {
-  entry: './App.js',
+  mode: 'development',
+  entry: './index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
@@ -46,6 +48,10 @@ module.exports = {
     ]
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: './index.html',
+      filename: 'index.html'
+    }),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
       process: 'process/browser'
@@ -54,7 +60,9 @@ module.exports = {
   ],
   devServer: {
     static: path.resolve(__dirname, 'dist'),
-    hot: false,
-    client: false
+    port: 8080,
+    hot: true,
+    historyApiFallback: true,
+    allowedHosts: 'all'
   }
 };
