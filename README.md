@@ -5,11 +5,11 @@ Eskişehir'de 5 kişilik grup için tamamen **peer-to-peer**, **end-to-end encry
 ## ✨ Özellikler
 
 - **E2EE Encryption** - TweetNaCl.js ile tamamen şifrelenmiş mesajlar
-- **Real-time Messaging** - Supabase Realtime ile canlı sohbet
+- **Local-first Messaging** - Sunucuya bağlı olmayan, yerel P2P odaklı iletişim
 - **Responsive Design** - Telefon, tablet, bilgisayar uyumlu
 - **Dark Theme** - Göz dostu modern arayüz
-- **Direct Login** - Email ile direkt giriş
-- **Supabase Backend** - Güvenli, skallanabilir altyapı
+- **Direct Login** - Yerel kullanıcı kimliği ile giriş
+- **No Supabase** - Harici servis bağımlılığı yok
 
 ## 🚀 Quick Start
 
@@ -31,10 +31,10 @@ python server.py
 
 ## 📦 Tech Stack
 
-- **Frontend**: React 18, Webpack, TweetNaCl.js, Supabase
-- **Backend**: Supabase (PostgreSQL, Auth, Realtime)
+- **Frontend**: React 18, Webpack, TweetNaCl.js
+- **Backend**: Yerel P2P akışı ve kullanıcı kimliği
 - **Encryption**: TweetNaCl.js (NaCl/Tweetnacl)
-- **Deployment**: Vercel
+- **Deployment**: Yerel çalıştırma odaklı
 
 ## 📁 Yapı
 
@@ -58,8 +58,8 @@ python server.py
 
 ## 🌐 Live
 
-- UI: https://cekirdek-chat.vercel.app (hazırlanıyor)
-- Supabase: Realtime subscriptions aktif
+- UI: Yerel olarak http://localhost:8080 adresinden açılır
+- Bağlı servis: Yok, tamamen yerel deneyim
 
 ---
 **Geliştirme Ekibi - 2026**
