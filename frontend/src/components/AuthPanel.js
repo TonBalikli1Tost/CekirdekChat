@@ -7,6 +7,7 @@ export default function AuthPanel({ onUserChange }) {
   const [user, setUser] = useState(null);
   const [statusMessage, setStatusMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showEmailForm, setShowEmailForm] = useState(true);
 
   useEffect(() => {
     if (!supabase) return;
@@ -77,6 +78,13 @@ export default function AuthPanel({ onUserChange }) {
     }
   };
 
+  const handleExit = () => {
+    setShowEmailForm(false);
+    setEmail('');
+    setStatusMessage('Teşekkürler.');
+    if (onUserChange) onUserChange(null);
+  };
+
   const handleSignOut = async () => {
     if (!supabase) return;
     setLoading(true);
@@ -86,6 +94,7 @@ export default function AuthPanel({ onUserChange }) {
     } else {
       setStatusMessage('Çıkış yapıldı.');
       setUser(null);
+      setShowEmailForm(true);
       if (onUserChange) onUserChange(null);
     }
     setLoading(false);
@@ -95,7 +104,7 @@ export default function AuthPanel({ onUserChange }) {
 
   return (
     <div style={{ padding: '16px', borderBottom: '1px solid #222', backgroundColor: '#09090b' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', flexDirection: 'column', '@media (min-width: 768px)': { flexDirection: 'row' } }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
         <div>
           <div style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '4px' }}>Kimlik</div>
           <div style={{ color: '#fff', fontSize: '14px' }}>
@@ -104,29 +113,35 @@ export default function AuthPanel({ onUserChange }) {
         </div>
 
         {!user ? (
-          <>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSignIn()}
-              placeholder="Email adresi"
-              style={{
-                backgroundColor: '#000',
-                color: '#fff',
-                border: '1px solid #18181b',
-                padding: '10px 12px',
-                minWidth: '100%',
-                maxWidth: '240px',
-                borderRadius: '4px',
-                outline: 'none',
-                fontSize: '14px',
-              }}
-            />
-            <Button onClick={handleSignIn} disabled={!email || loading}>
-              {loading ? 'GİRİŞ YAPILIYOR...' : 'Giriş / Sign In'}
-            </Button>
-          </>
+          showEmailForm ? (
+            <>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSignIn()}
+                placeholder="Email adresi"
+                style={{
+                  backgroundColor: '#000',
+                  color: '#fff',
+                  border: '1px solid #18181b',
+                  padding: '10px 12px',
+                  minWidth: '240px',
+                  borderRadius: '4px',
+                  outline: 'none',
+                  fontSize: '14px',
+                }}
+              />
+              <Button onClick={handleSignIn} disabled={!email || loading}>
+                {loading ? 'GİRİŞ YAPILIYOR...' : 'Giriş / Sign In'}
+              </Button>
+              <Button onClick={handleExit} disabled={loading} variant="secondary" style={{ minWidth: '120px' }}>
+                Çık
+              </Button>
+            </>
+          ) : (
+            <div style={{ color: '#f8fafc', fontSize: '14px' }}>Teşekkürler.</div>
+          )
         ) : (
           <Button onClick={handleSignOut} disabled={loading} variant="ghost">
             Çıkış / Sign Out

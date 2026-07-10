@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../services/supabaseClient';
-import { generateKeyPair, encryptMessage } from '../services/encryptionService';
+import { generateKeyPair, encryptMessage, decryptMessage } from '../services/encryptionService';
 import Button from './Button';
 
 const FRIENDS = [
@@ -19,9 +19,20 @@ export default function ChatScreen({ user }) {
   const [keyPair, setKeyPair] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  // Key pair oluştur
+  // Key pair oluştur ve kalıcılığı sağla
   useEffect(() => {
+    const saved = window.localStorage.getItem('cekirdek-chat-keypair');
+    if (saved) {
+      try {
+        setKeyPair(JSON.parse(saved));
+        return;
+      } catch (err) {
+        console.error('Anahtar yükleme hatası:', err);
+      }
+    }
+
     const keys = generateKeyPair();
+    window.localStorage.setItem('cekirdek-chat-keypair', JSON.stringify(keys));
     setKeyPair(keys);
   }, [user]);
 
@@ -74,13 +85,25 @@ export default function ChatScreen({ user }) {
   }, [user]);
 
   const activeMessages = useMemo(() => {
-    return messages.map((msg) => ({
-      id: msg.id,
-      from: msg.sender,
-      text: msg.content,
-      encrypted: msg.encrypted || false,
-    }));
-  }, [messages]);
+    return messages.map((msg) => {
+      let text = msg.content;
+      if (msg.encrypted && msg.metadata && keyPair) {
+        try {
+          const metadata = JSON.parse(msg.metadata);
+          const decrypted = decryptMessage(metadata, keyPair.publicKey, keyPair.secretKey);
+          if (decrypted) text = decrypted;
+        } catch (err) {
+          console.error('Mesaj deşifreleme hatası:', err);
+        }
+      }
+      return {
+        id: msg.id,
+        from: msg.sender,
+        text,
+        encrypted: msg.encrypted || false,
+      };
+    });
+  }, [messages, keyPair]);
 
   const activeFriendData = FRIENDS.find((friend) => friend.id === activeFriend) || FRIENDS[0];
 
