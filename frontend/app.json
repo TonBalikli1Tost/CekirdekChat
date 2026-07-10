@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "Çekirdek Chat",
+    "slug": "cekirdek-chat",
+    "version": "1.0.0",
+    "platforms": ["web", "ios", "android"],
+    "icon": "./assets/appicon.svg",
+    "splash": {
+      "backgroundColor": "#000000"
+    },
+    "web": {
+      "favicon": "./assets/app.ico"
+    }
+  }
+}
