@@ -1,6 +1,6 @@
 # Çekirdek P2P
 
-Aşağıdaki yapı proje ana dizini için önerilen düzeni gösterir ve demo giriş ekranı görseli README içine gömülmüştür.
+Aşağıdaki yapı proje ana dizini için önerilen düzeni gösterir.
 
 / Cekirdek-P2P
 
@@ -19,5 +19,3 @@ Görsel: Giriş ekranı (demo). Aşağıdaki görüntü repo içindeki Cekirdek-
 <p align="center">
   <img src="./Cekirdek-P2P/assets/cekirdek-entry.png" alt="Çekirdek Giriş" style="max-width:640px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.6);"/>
 </p>
-
-> Not: Görsel proje içi demo amaçlıdır. Gerçek API anahtarlarını .env dosyanıza güvenli şekilde ekleyin (repoya commit etmeyin).
