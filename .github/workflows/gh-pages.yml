@@ -15,18 +15,39 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        working-directory: ./frontend
+      - name: Install & Build (if frontend exists)
         run: |
-          if [ -f package.json ]; then npm ci || npm install; else echo "No frontend package.json, skipping install"; fi
+          if [ -d ./frontend ]; then
+            echo "Found frontend folder — installing and building"
+            cd frontend
+            if [ -f package.json ]; then
+              npm ci || npm install
+              if npm run build; then
+                echo "frontend build succeeded"
+              else
+                echo "frontend build failed — continuing to deploy existing dist if present"
+              fi
+            else
+              echo "frontend/package.json missing — skipping frontend build"
+            fi
+            cd ..
+            # Copy frontend/dist to repo-level dist if it exists
+            if [ -d ./frontend/dist ]; then
+              rm -rf ./dist || true
+              mkdir -p ./dist
+              cp -r ./frontend/dist/* ./dist/
+              echo "Copied frontend/dist -> ./dist"
+            fi
+          else
+            echo "No frontend folder found — using repo-level ./dist if present"
+          fi
 
-      - name: Build frontend
-        working-directory: ./frontend
+      - name: Show dist contents (debug)
         run: |
-          if [ -f package.json ]; then npm run build || echo "npm run build failed or not configured"; else echo "No package.json, skipping build"; fi
+          echo "Dist listing:"; ls -la ./dist || echo "./dist not present"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./frontend/dist
+          publish_dir: ./dist

@@ -1,13 +1,12 @@
 ﻿import React from 'react';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, TextInput, Pressable, TouchableOpacity, Alert, ScrollView } from 'react-native';
 
 export default function App() {
-  const [nick, setNick] = React.useState('çekirdekçi_42');
+  const [nick, setNick] = React.useState('cekirdekçi_42');
   const [channels, setChannels] = React.useState(['genel','oyun','müzik','yazılım','sohbet']);
   const [selected, setSelected] = React.useState('genel');
   const [newChannel, setNewChannel] = React.useState('');
-
-  const addChannel = () => {
+n  const addChannel = () => {
     const trimmed = newChannel.trim();
     if (!trimmed) return;
     if (!channels.includes(trimmed)) {
@@ -16,41 +15,36 @@ export default function App() {
       setSelected(trimmed);
     }
   };
-
-  const join = () => {
-    // For now just show an alert; real join would call Supabase / signaling
+n  const join = () => {
     const msg = `Takma ad: ${nick}\nKanal: ${selected}`;
-    if (typeof alert !== 'undefined') alert(msg);
+    Alert.alert('Katılma Bilgisi', msg);
   };
-
-  return (
+n  return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <View style={styles.card}>
-        <Text style={styles.header}>Çekirdek'e Katıl</Text>
-        <Text style={styles.hint}>Takma adını gir, bir kanal seç ve gerçek P2P sohbete başla.</Text>
-
-        <Text style={styles.label}>TAKMA AD</Text>
-        <TextInput value={nick} onChangeText={setNick} style={styles.input} placeholder="ör. çekirdekçi_42" placeholderTextColor="#777" />
-
-        <Text style={[styles.label, {marginTop:12}]}>KANAL SEÇ</Text>
-        <View style={styles.chipsRow}>
-          {channels.map(ch => (
-            <Pressable key={ch} onPress={() => setSelected(ch)} style={[styles.chip, selected===ch && styles.chipActive]}>
-              <Text style={[styles.chipText, selected===ch && styles.chipTextActive]}># {ch}</Text>
-            </Pressable>
-          ))}
+      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+        <View style={styles.card}>
+          <Text style={styles.header}>Çekirdek'e Katıl</Text>
+          <Text style={styles.hint}>Takma adını gir, bir kanal seç ve gerçek P2P sohbete başla.</Text>
+n          <Text style={styles.label}>TAKMA AD</Text>
+          <TextInput value={nick} onChangeText={setNick} style={styles.input} placeholder="ör. çekirdekçi_42" placeholderTextColor="#777" />
+n          <Text style={[styles.label, {marginTop:12}]}>KANAL SEÇ</Text>
+          <View style={styles.chipsRow}>
+            {channels.map(ch => (
+              <Pressable key={ch} onPress={() => setSelected(ch)} style={[styles.chip, selected===ch && styles.chipActive]}>
+                <Text style={[styles.chipText, selected===ch && styles.chipTextActive]}># {ch}</Text>
+              </Pressable>
+            ))}
+          </View>
+n          <View style={styles.newChannelRow}>
+            <TextInput value={newChannel} onChangeText={setNewChannel} style={styles.newChannelInput} placeholder="Yeni kanal oluştur" placeholderTextColor="#777" />
+            <TouchableOpacity onPress={addChannel} style={styles.addBtn}><Text style={{color:'#fff'}}>+ Ekle</Text></TouchableOpacity>
+          </View>
+n          <TouchableOpacity style={styles.joinBtn} onPress={join}>
+            <Text style={styles.joinBtnText}>#{selected} kanalına katıl</Text>
+          </TouchableOpacity>
         </View>
-
-        <View style={styles.newChannelRow}>
-          <TextInput value={newChannel} onChangeText={setNewChannel} style={styles.newChannelInput} placeholder="Yeni kanal oluştur" placeholderTextColor="#777" />
-          <TouchableOpacity onPress={addChannel} style={styles.addBtn}><Text style={{color:'#fff'}}>+ Ekle</Text></TouchableOpacity>
-        </View>
-
-        <TouchableOpacity style={styles.joinBtn} onPress={join}>
-          <Text style={styles.joinBtnText}>#{selected} kanalına katıl</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -58,28 +52,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#0f1720'
   },
-  title: {
-    color: '#ffffff',
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  subtitle: {
-    color: '#aaaaaa',
-    fontSize: 16,
-  },
-});
-
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0f1720',
+  scroll: {
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16
@@ -99,7 +75,7 @@ const styles = StyleSheet.create({
   hint: { color: '#9ca3af', fontSize: 13, marginBottom: 12 },
   label: { color: '#9ca3af', fontSize: 12, marginTop: 8, marginBottom:4 },
   input: { backgroundColor: '#0b1220', color: '#fff', padding: 10, borderRadius: 6, borderWidth: 0.5, borderColor: '#1f2937' },
-  chipsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop:6 },
+  chipsRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop:6 },
   chip: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 20, backgroundColor: '#1f2937', marginRight: 8, marginTop:6 },
   chipActive: { backgroundColor: '#4338ca' },
   chipText: { color: '#e5e7eb' },
