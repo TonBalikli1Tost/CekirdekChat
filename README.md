@@ -14,11 +14,7 @@ Aşağıdaki yapı proje ana dizinin içini gösterir.
 - package.json- Bağımlılıklar
   
 <p align="center">
-  <img src="./Cekirdek-P2P/assets/cekirdek-entry.png" alt="Çekirdek Giriş" style="max-width:640px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.6);"/>
-</p>
-
-<p align="center">
   <h3>CekirdekChat</h3>
   <br>
-  <img width="200" src="https://github.com/user-attachments/assets/25fa0d07-f8bf-4ba3-baac-a14cdc5d11b4" />
+  <img width="80" src="https://github.com/user-attachments/assets/25fa0d07-f8bf-4ba3-baac-a14cdc5d11b4" />
 </p>
