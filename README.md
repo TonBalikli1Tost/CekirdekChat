@@ -19,11 +19,11 @@ Aşağıdaki yapı proje ana dizinin içini gösterir.
 
 <table width="100%" border="0" style="border: none;">
   <tr style="border: none;">
-    <td style="border: none; valign: middle;">
-      <h3>CekirdekChat</h3>
-    </td>
-    <td align="right" style="border: none; valign: middle;">
-      <img width="90" src="https://github.com/user-attachments/assets/25fa0d07-f8bf-4ba3-baac-a14cdc5d11b4" style="filter: drop-shadow(0 0 4px #ff5500); max-width: 140px;" />
+    <!-- Yazıyı küçülttük (h1'den h3'e) -->
+    <td style="border: none;"><h3>CekirdekChat</h3></td>
+    <td align="right" style="border: none;">
+      <!-- Fotoğrafı büyüttük (40'tan 200'e) ve yarı saydamlığı kaldırdık -->
+      <img width="200" src="https://github.com/user-attachments/assets/25fa0d07-f8bf-4ba3-baac-a14cdc5d11b4" />
     </td>
   </tr>
 </table>
