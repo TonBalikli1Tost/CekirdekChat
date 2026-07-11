@@ -6,28 +6,28 @@
 
 ---
 
-##  🚀 Live Application
+##   Live Application
 
-**🔗 [Çekirdek Chat Live](https://cekirdek-chat.vercel.app)**
+** [Çekirdek Chat Live](https://cekirdek-chat.vercel.app)**
 
 The application is fully deployed and accessible globally via Vercel CDN. No local setup required—just open the link and start chatting!
 
 ---
 
-##  ✨ Features
+##   Features
 
-- 🔐 **End-to-End Encryption** - All messages encrypted with TweetNaCl.js
-- 🌐 **P2P Architecture** - Direct peer-to-peer connections via WebRTC
-- ⚡ **Real-time Messaging** - Powered by Supabase Realtime
-- 📱 **Fully Responsive** - Works on mobile, tablet, and desktop
-- 🎨 **Dark Modern UI** - Beautiful Discord-like interface
-- 🔄 **Scalable** - Handles multiple concurrent users
-- 🛡️ **Secure** - HSTS, CSP headers, rate limiting
-- 🚀 **Cloud Hosted** - Deployed on Vercel with global CDN
+-  **End-to-End Encryption** - All messages encrypted with TweetNaCl.js
+-  **P2P Architecture** - Direct peer-to-peer connections via WebRTC
+-  **Real-time Messaging** - Powered by Supabase Realtime
+-  **Fully Responsive** - Works on mobile, tablet, and desktop
+-  **Dark Modern UI** - Beautiful Discord-like interface
+-  **Scalable** - Handles multiple concurrent users
+-  **Secure** - HSTS, CSP headers, rate limiting
+-  **Cloud Hosted** - Deployed on Vercel with global CDN
 
 ---
 
-##  🏗️ Architecture
+##   Architecture
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -70,7 +70,7 @@ User A              User B              User C
 
 ---
 
-##  🔐 Security
+##   Security
 
 ### Encryption
 - **End-to-End Encryption**: Every message is encrypted before leaving the browser
@@ -90,7 +90,7 @@ User A              User B              User C
 
 ---
 
-##  🎯 How It Works
+##   How It Works
 
 ### 1. **Join a Room**
    - User logs in or authenticates anonymously
@@ -113,7 +113,7 @@ User A              User B              User C
 
 ---
 
-##  📊 Use Cases
+##  Use Cases
 
 - ✅ **Group Chat** - 5-50+ people chatting securely
 - ✅ **Project Teams** - Private encrypted team communication
@@ -123,7 +123,7 @@ User A              User B              User C
 
 ---
 
-##  🌍 Global Deployment
+##   Global Deployment
 
 | Component | Provider | Status |
 |-----------|----------|--------|
@@ -150,11 +150,10 @@ https://cekirdek-chat.vercel.app
 2. **Enter your username** (or authenticate)
 3. **Select a room** or create a new one
 4. **Invite friends** to the room
-5. **Start chatting** - all encrypted! 🔐
-
+5. **Start chatting** - all encrypted! 
 ---
 
-##  🔧 Development Setup (Optional)
+##  Development Setup (Optional)
 
 If you want to run locally for development:
 
@@ -188,7 +187,7 @@ npm run build
 
 ---
 
-##  🚢 Deployment
+##  Deployment
 
 ### Automatic Deployment
 Every push to `main` branch automatically:
@@ -205,7 +204,7 @@ git push origin main
 
 ---
 
-##  📝 Environment Variables
+##   Environment Variables
 
 Required for running locally (`frontend/.env`):
 
@@ -218,7 +217,7 @@ See `frontend/.env.example` for details.
 
 ---
 
-##  📊 System Architecture
+##   System Architecture
 
 ### Database Schema
 ```sql
@@ -243,7 +242,7 @@ messages: id, room_id, user_id, sender, encrypted_text, created_at
 
 ---
 
-##  ⚡ Performance
+##   Performance
 
 - **Frontend Bundle**: ~5.6 MB (gzipped ~1.2 MB)
 - **First Load**: <2 seconds (CDN cached)
@@ -252,7 +251,7 @@ messages: id, room_id, user_id, sender, encrypted_text, created_at
 
 ---
 
-##  🛡️ Security Checklist
+##   Security Checklist
 
 - ✅ **E2EE**: TweetNaCl.js encryption
 - ✅ **HTTPS**: All traffic encrypted
@@ -265,7 +264,7 @@ messages: id, room_id, user_id, sender, encrypted_text, created_at
 
 ---
 
-##  🤝 Contributing
+##   Contributing
 
 This is an open-source project. Contributions are welcome!
 
@@ -277,7 +276,7 @@ This is an open-source project. Contributions are welcome!
 
 ---
 
-##  📞 Support & Issues
+##  Support & Issues
 
 - **Bug Reports**: [GitHub Issues](https://github.com/TonBalikli1Tost/CekirdekChat/issues)
 - **Feature Requests**: [GitHub Discussions](https://github.com/TonBalikli1Tost/CekirdekChat/discussions)
@@ -285,28 +284,28 @@ This is an open-source project. Contributions are welcome!
 
 ---
 
-##  📄 License
+##   License
 
 MIT License - See LICENSE file for details
 
 ---
 
-##  👥 Team
+##   Team
 
 - **TonBalikli1Tost** - Lead Developer
 - **Copilot** - AI Assistant, Production Optimization
 
 ---
 
-##  🔗 Links
+##   Links
 
-- 🌐 **Live App**: https://cekirdek-chat.vercel.app
-- 📦 **GitHub**: https://github.com/TonBalikli1Tost/CekirdekChat
-- 🗄️ **Supabase**: https://supabase.com
-- 🚀 **Vercel**: https://vercel.com
+- *Live App**: https://cekirdek-chat.vercel.app
+-   **GitHub**: https://github.com/TonBalikli1Tost/CekirdekChat
+-  **Supabase**: https://supabase.com
+- **Vercel**: https://vercel.com
 
 ---
 
-**Built with ❤️ | Made in 2026 | Powered by Vercel & Supabase**
+| Powered by Vercel & Supabase**
 
 
