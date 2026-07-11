@@ -1,4 +1,3 @@
-<!-- Başlık Kartı Tasarımı -->
 <div style="
   background-color: #0d1117; 
   border: 2px solid #a371f7; 
@@ -17,8 +16,6 @@
     letter-spacing: 1px;
     text-shadow: 0 0 10px rgba(163, 113, 247, 0.4);
   ">
-
-
 # Çekirdek P2P Chat
 
 Aşağıdaki yapı proje ana dizinin içini gösterir.
