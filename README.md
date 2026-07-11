@@ -1,3 +1,24 @@
+<!-- Başlık Kartı Tasarımı -->
+<div style="
+  background-color: #0d1117; 
+  border: 2px solid #a371f7; 
+  border-radius: 12px; 
+  padding: 20px; 
+  text-align: center; 
+  margin-bottom: 25px;
+  box-shadow: 0 4px 20px rgba(163, 113, 247, 0.2);
+">
+  <h1 style="
+    color: #a371f7; 
+    margin: 0; 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 2.2em;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(163, 113, 247, 0.4);
+  ">
+
+
 # Çekirdek P2P Chat
 
 Aşağıdaki yapı proje ana dizinin içini gösterir.
