@@ -1,0 +1,14 @@
+﻿{
+  "name": "cekirdek-chat-desktop",
+  "version": "1.0.0",
+  "main": "electron-main.js",
+  "scripts": {
+    "install:all": "npm install && cd frontend && npm install && cd ../mobile && npm install",
+    "build:frontend": "cd frontend && npm run build",
+    "start": "npm run build:frontend && electron .",
+    "start:mobile": "cd mobile && npm start"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0"
+  }
+}
