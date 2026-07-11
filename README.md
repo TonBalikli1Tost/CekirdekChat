@@ -16,5 +16,10 @@ Aşağıdaki yapı proje ana dizinin içini gösterir.
 <p align="center">
   <h3>CekirdekChat</h3>
   <br>
-  <img width="80" src="https://github.com/user-attachments/assets/25fa0d07-f8bf-4ba3-baac-a14cdc5d11b4" />
+  <!-- Küçük Logo -->
+  <img width="60" src="https://github.com/user-attachments/assets/25fa0d07-f8bf-4ba3-baac-a14cdc5d11b4" />
+  <br><br><br>
+  <!-- İşaretlediğin İki Ekran Görüntüsü -->
+  <img width="350" src="Screenshot 2026-07-11 224255.png" alt="Giriş Ekranı" style="margin-right: 10px;" />
+  <img width="350" src="Screenshot 2026-07-12 012158.png" alt="Sohbet Ekranı" />
 </p>
