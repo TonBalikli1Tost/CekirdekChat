@@ -1,3 +1,4 @@
+import os
 from twisted.internet.protocol import DatagramProtocol
 from twisted.internet import reactor
 
@@ -19,6 +20,7 @@ class CekirdekServer(DatagramProtocol):
             self.transport.write('\n'.join(seed_peers).encode('utf-8'), addr)
 
 if __name__ == '__main__':
-    print('Çekirdek Seeding Sunucusu Başlatıldı...')
-    reactor.listenUDP(9999, CekirdekServer())
+    port = int(os.environ.get('SEED_PORT', '9999'))
+    print(f'Çekirdek Seeding Sunucusu Başlatıldı (UDP port {port})...')
+    reactor.listenUDP(port, CekirdekServer())
     reactor.run()

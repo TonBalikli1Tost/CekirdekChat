@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: cekirdek-seeding
+    env: docker
+    # The Dockerfile path inside the repo
+    dockerfilePath: backend-python/Dockerfile
+    plan: free
+    # Set environment variables in Render dashboard - do NOT commit secrets here
+    envVars:
+      - key: SEED_PORT
+        value: "9999"
+    # Health check
+    healthCheckPath: "/"
+    # Start command is defined by Dockerfile's CMD
