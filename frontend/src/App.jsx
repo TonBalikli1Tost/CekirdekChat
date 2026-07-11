@@ -6,58 +6,109 @@ const SIGNAL_URL = import.meta.env.VITE_SIGNALING_URL || 'ws://localhost:9003';
 export default function App() {
   const [status, setStatus] = useState('idle'); // idle | connecting | p2p | encrypted
   const [room, setRoom] = useState('genel');
+  const [nick, setNick] = useState('çekirdekçi_42');
   const wsRef = useRef(null);
   const peersRef = useRef({});
 
   useEffect(() => {
-    // connect to signaling
-    setStatus('connecting');
-    const ws = new WebSocket(SIGNAL_URL);
-    wsRef.current = ws;
-    ws.onopen = () => {
-      setStatus('connecting');
-      ws.send(JSON.stringify({ type: 'join', room }));
+    // lazy connect only when user interacts
+    return () => {
+      if (wsRef.current) wsRef.current.close();
     };
-    ws.onmessage = (ev) => {
-      const d = JSON.parse(ev.data);
-      if (d.type === 'peers') {
-        // create peers (initiator)
-        d.peers.forEach((id) => createPeer(id, true));
-      } else if (d.type === 'peer-joined') {
-        createPeer(d.id, true);
-      } else if (d.type === 'signal') {
-        receiveSignal(d.from, d.payload);
-      } else if (d.type === 'peer-left') {
-        // cleanup
-      }
-    };
-    ws.onclose = () => { setStatus('idle'); };
-    ws.onerror = () => { setStatus('idle'); };
+  }, []);
 
-    return () => { ws.close(); };
-  }, [room]);
+  const startSignaling = () => {
+    if (wsRef.current) return;
+    setStatus('connecting');
+    try {
+      const ws = new WebSocket(SIGNAL_URL);
+      wsRef.current = ws;
+      ws.onopen = () => {
+        ws.send(JSON.stringify({ type: 'join', room }));
+      };
+      ws.onmessage = (ev) => {
+        try {
+          const d = JSON.parse(ev.data);
+          if (d.type === 'peers') {
+            d.peers.forEach((id) => createPeer(id, true));
+          } else if (d.type === 'peer-joined') {
+            createPeer(d.id, true);
+          } else if (d.type === 'signal') {
+            receiveSignal(d.from, d.payload);
+          } else if (d.type === 'peer-left') {
+            // remove peer
+            if (peersRef.current[d.id]) {
+              try { peersRef.current[d.id].destroy(); } catch(e){}
+              delete peersRef.current[d.id];
+            }
+          }
+        } catch (e) {
+          console.warn('invalid message', e);
+        }
+      };
+      ws.onclose = () => setStatus('idle');
+      ws.onerror = () => setStatus('idle');
+    } catch (e) {
+      setStatus('idle');
+    }
+  };
 
   function createPeer(id, initiator) {
+    if (peersRef.current[id]) return;
     const peer = new SimplePeer({ initiator, trickle: true });
     peer.on('signal', (data) => { wsRef.current && wsRef.current.send(JSON.stringify({ type: 'signal', room, target: id, payload: data })); });
-    peer.on('connect', () => { setStatus('p2p'); peer.send('hello from client'); });
+    peer.on('connect', () => { setStatus('p2p'); peer.send(`hello from ${nick}`); });
     peer.on('data', (d) => { console.log('data', d.toString()); });
+    peer.on('error', (e) => { console.warn('peer error', e); });
     peersRef.current[id] = peer;
   }
 
   function receiveSignal(from, payload) {
     if (!peersRef.current[from]) createPeer(from, false);
-    peersRef.current[from].signal(payload);
+    try { peersRef.current[from].signal(payload); } catch (e) { console.warn('signal fail', e); }
   }
 
   return (
-    <div style={{fontFamily:'Segoe UI',padding:24,maxWidth:840,margin:'0 auto'}}>
-      <h1>Çekirdek Chat — Web</h1>
-      <div>Status: <strong>{status}</strong></div>
-      <div style={{marginTop:12}}>
-        <label>Room: <input value={room} onChange={e=>setRoom(e.target.value)} /></label>
-      </div>
-      <p style={{marginTop:12}}>Open multiple browser tabs to test P2P via signaling server.</p>
+    <div className="app-root">
+      <header className="app-header">
+        <div className="brand">
+          <img src="/assets/logo.png" alt="Çekirdek" className="logo" onError={(e)=>{e.target.style.display='none'}} />
+          <div>
+            <h1>Çekirdek Chat</h1>
+            <p className="muted">P2P sohbet - doğrudan bağlantı</p>
+          </div>
+        </div>
+        <div className="status">
+          <span className={`badge badge-${status}`}>{status.toUpperCase()}</span>
+        </div>
+      </header>
+
+      <main className="container">
+        <section className="card">
+          <h2>Katıl</h2>
+          <div className="row">
+            <label>Takma ad</label>
+            <input value={nick} onChange={e=>setNick(e.target.value)} />
+          </div>
+          <div className="row">
+            <label>Kanal</label>
+            <input value={room} onChange={e=>setRoom(e.target.value)} />
+          </div>
+          <div className="row actions">
+            <button className="btn primary" onClick={startSignaling}>Bağlan</button>
+            <button className="btn" onClick={()=>{ setStatus('idle'); if(wsRef.current) wsRef.current.close(); wsRef.current=null; }}>Ayrıl</button>
+          </div>
+        </section>
+
+        <section className="card">
+          <h3>Bilgilendirme</h3>
+          <p>Bu demo simple-peer kullanarak tarayıcılar arasında doğrudan P2P bağlantı kurar. Aynı kanalda birkaç sekme veya cihaz açarak test edebilirsiniz.</p>
+        </section>
+      </main>
+
+      <footer className="app-footer">
+        <small>© Çekirdek — Demo</small>
+      </footer>
     </div>
   );
 }
