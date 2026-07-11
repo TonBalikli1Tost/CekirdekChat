@@ -1,6 +1,6 @@
 # Çekirdek P2P Chat
 
-Aşağıdaki yapı proje ana dizini için önerilen düzeni gösterir.
+Aşağıdaki yapı proje ana dizinin içini gösterir.
 
 / Cekirdek
 - /app        - Expo Router (Sayfalar ve Navigasyon)
