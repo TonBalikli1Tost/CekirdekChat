@@ -11,7 +11,9 @@
     "react": "18.2.0",
     "react-native": "0.74.1",
     "react-native-paper": "^5.0.0",
-    "zustand": "^4.4.0"
+    "zustand": "^4.4.0",
+    "expo-dev-client": "^2.0.0",
+    "react-native-webrtc": "^1.94.0"
   },
   "private": true
 }

@@ -14,6 +14,13 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.cekirdek.chat",
+      "permissions": [
+        "INTERNET",
+        "RECORD_AUDIO",
+        "CAMERA",
+        "ACCESS_NETWORK_STATE"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#000000"
       }

@@ -1,0 +1,29 @@
+name: EAS Android build
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - feature/*
+
+jobs:
+  eas-build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: |
+          cd mobile
+          npm ci
+          npm install -g eas-cli
+      - name: EAS build (android)
+        env:
+          EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
+        run: |
+          cd mobile
+          eas build --platform android --profile production --non-interactive

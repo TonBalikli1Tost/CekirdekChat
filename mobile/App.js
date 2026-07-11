@@ -1,5 +1,5 @@
 ﻿import * as React from 'react';
-import { View, StyleSheet, ScrollView, Platform, Text as RNText } from 'react-native';
+import { View, StyleSheet, ScrollView, Platform, Text as RNText, Image } from 'react-native';
 import { Provider as PaperProvider, Text, TextInput, Button, Chip, ActivityIndicator } from 'react-native-paper';
 import { useChannelStore } from './store';
 
@@ -18,9 +18,33 @@ export default function App() {
   };
 
   const onJoin = () => {
-    // placeholder — start signaling connection
-    startSignaling(selected);
+    // request local audio if possible then start signaling
+    requestPermissionsAndMedia().then(() => startSignaling(selected)).catch(() => startSignaling(selected));
   };
+
+  async function requestPermissionsAndMedia() {
+    // On Android/iOS use react-native-webrtc mediaDevices if available (requires EAS or bare build)
+    if (Platform.OS !== 'web') {
+      try {
+        const rnwebrtc = require('react-native-webrtc');
+        const { mediaDevices } = rnwebrtc;
+        if (mediaDevices && mediaDevices.getUserMedia) {
+          try {
+            await mediaDevices.getUserMedia({ audio: true, video: false });
+            // local audio stream obtained; app can attach to PeerConnection later
+            return true;
+          } catch (err) {
+            // permission denied or error
+            return false;
+          }
+        }
+      } catch (e) {
+        // module not installed / not available in Expo Go
+        return false;
+      }
+    }
+    return false;
+  }
 
   const startSignaling = (room) => {
     setStatus('connecting');
@@ -34,12 +58,10 @@ export default function App() {
         let d = {};
         try { d = JSON.parse(ev.data); } catch(e) { return; }
         if (d.type === 'peers') {
-          // once peers present, we consider p2p tunnel potentially active (simple heuristic)
           if (d.peers && d.peers.length > 0) setStatus('p2p');
         } else if (d.type === 'peer-joined') {
           setStatus('p2p');
         } else if (d.type === 'signal') {
-          // handle signaling payload (simple-peer client would be here)
           setStatus('p2p');
         }
       };
@@ -92,13 +114,16 @@ export default function App() {
             #{selected} kanalına katıl
           </Button>
         </View>
-      </ScrollView>
+            {/* floating logo */}
+            <Image source={{ uri: LOGO_DATA_URI }} style={styles.floatingLogo} />
+          </ScrollView>
     </PaperProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 16, backgroundColor: '#0f1720' },
+  floatingLogo: { position: 'absolute', width: 44, height: 44, right: 14, bottom: 18, borderRadius: 10, elevation: 8 },
   card: { width: '100%', maxWidth: 560, backgroundColor: '#111827', borderRadius: 12, padding: 18, elevation: 6 },
   header: { color: '#fff', marginBottom: 6 },
   hint: { color: '#9ca3af', marginBottom: 12 },
