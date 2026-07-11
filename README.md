@@ -1,4 +1,6 @@
+
 #  Çekirdek Chat - P2P Encrypted Messaging
+<img width="637" height="696" alt="image" src="https://github.com/user-attachments/assets/d1bf2b38-ca53-404c-b99a-5045b3199d07" />
 
 > **Completely peer-to-peer, end-to-end encrypted group chat application. Join any group and chat securely in real-time.**
 
@@ -56,7 +58,7 @@ User A              User B              User C
 
 ---
 
-##  🔌 Tech Stack
+##   Tech Stack
 
 | Layer | Technology |
 |-------|------------|
