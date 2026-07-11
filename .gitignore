@@ -1,8 +1,79 @@
-# Ignore environment files
+# Environment files
+.env
+.env.local
+.env.*.local
 frontend/.env
-*.env
+frontend/.env.local
+frontend/.env.*.local
 
-# Ignore generated files and local workspace settings
+# Dependencies
+node_modules/
 frontend/node_modules/
+backend-python/__pycache__/
+backend-python/venv/
+backend-python/.venv/
+
+# Build outputs
+dist/
 frontend/dist/
+build/
+out/
+.next/
+
+# IDE and editor files
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.sublime-project
+.sublime-workspace
+
+# Logging
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Build caches
+.eslintcache
+.turbo/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Vercel and deployment
+.vercel/
+out/
+.now/
+
+# Python
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Archives
+*.zip
+*.tar.gz
+cekirdek-chat-source.zip
+
+# Lock files (for production, keep only in repo)
+# package-lock.json
+# yarn.lock
+

@@ -16,12 +16,32 @@ const envDefinitions = Object.entries(env).reduce((defs, [key, value]) => {
   return defs;
 }, {});
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 module.exports = {
-  mode: 'development',
+  mode: isProduction ? 'production' : 'development',
   entry: './index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: isProduction ? '[name].[contenthash:8].js' : '[name].js',
+    chunkFilename: isProduction ? '[name].[contenthash:8].js' : '[name].js',
+    clean: true,
+  },
+  optimization: {
+    minimize: isProduction,
+    runtimeChunk: 'single',
+    splitChunks: {
+      chunks: 'all',
+      maxInitialRequests: Infinity,
+      minSize: 0,
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          priority: 10,
+        },
+      },
+    },
   },
   resolve: {
     extensions: ['.js', '.jsx'],
@@ -41,7 +61,8 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-react']
+            presets: ['@babel/preset-react'],
+            cacheDirectory: true,
           }
         }
       }
@@ -50,19 +71,27 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './index.html',
-      filename: 'index.html'
+      filename: 'index.html',
+      minify: isProduction,
     }),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
       process: 'process/browser'
     }),
-    new webpack.DefinePlugin(envDefinitions)
+    new webpack.DefinePlugin({
+      ...envDefinitions,
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    }),
   ],
+  devtool: isProduction ? false : 'eval-source-map',
   devServer: {
     static: path.resolve(__dirname, 'dist'),
     port: 8080,
     hot: true,
     historyApiFallback: true,
-    allowedHosts: 'all'
-  }
+    allowedHosts: 'all',
+    compress: true,
+  },
 };
+
+
