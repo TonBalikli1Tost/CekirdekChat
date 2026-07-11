@@ -9,7 +9,8 @@
     "build:frontend": "[ -d frontend ] && (cd frontend && npm run build) || echo \"no frontend to build\"",
     "build": "npm run build:frontend || echo \"no frontend build\"",
     "start": "npm run build && electron .",
-    "start:mobile": "cd mobile && npm start"
+    "start:mobile": "cd mobile && npm start",
+    "start:signaling": "python signaling/server.py"
   },
 
   "devDependencies": {
