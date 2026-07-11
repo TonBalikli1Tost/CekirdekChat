@@ -1,8 +1,8 @@
-# 🧵 Çekirdek Chat - P2P Encrypted Messaging
+#  Çekirdek Chat - P2P Encrypted Messaging
 
 Eskişehir'de 5 kişilik grup için tamamen **peer-to-peer**, **end-to-end encrypted** iletişim uygulaması.
 
-## ✨ Özellikler
+##  Özellikler
 
 - **E2EE Encryption** - TweetNaCl.js ile tamamen şifrelenmiş mesajlar
 - **Local-first Messaging** - Sunucuya bağlı olmayan, yerel P2P odaklı iletişim
@@ -11,7 +11,7 @@ Eskişehir'de 5 kişilik grup için tamamen **peer-to-peer**, **end-to-end encry
 - **Direct Login** - Yerel kullanıcı kimliği ile giriş
 - **No Supabase** - Harici servis bağımlılığı yok
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Frontend Setup
 ```bash
@@ -29,14 +29,14 @@ python server.py
 # Port 9999
 ```
 
-## 📦 Tech Stack
+##  Tech Stack
 
 - **Frontend**: React 18, Webpack, TweetNaCl.js
 - **Backend**: Yerel P2P akışı ve kullanıcı kimliği
 - **Encryption**: TweetNaCl.js (NaCl/Tweetnacl)
 - **Deployment**: Yerel çalıştırma odaklı
 
-## 📁 Yapı
+##  Yapı
 
 ```
 ├── frontend/              # React UI
@@ -50,13 +50,13 @@ python server.py
 └── package.json
 ```
 
-## 🔐 Security
+##  Security
 
 - **TweetNaCl.js** E2EE ile tüm mesajlar şifrelenmiş
 - **Supabase RLS** ile sadece auth users mesaj gönderebilir
 - **Row-Level Security** ile veri izolasyonu
 
-## 🌐 Live
+##  Live
 
 - UI: Yerel olarak http://localhost:8080 adresinden açılır
 - Bağlı servis: Yok, tamamen yerel deneyim
