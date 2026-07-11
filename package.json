@@ -4,13 +4,13 @@
   "description": "Çekirdek Chat - Peer-to-Peer Chat Application",
   "private": true,
   "scripts": {
-    "install:all": "npm install && cd frontend && npm install && cd ../backend-python && pip install -r requirements.txt",
+    "install:all": "npm install && cd frontend && npm install",
     "postinstall": "cd frontend && npm install",
     "dev:frontend": "cd frontend && npm start",
     "build": "cd frontend && npm run build",
-    "build:frontend": "cd frontend && npm run build"
+    "start": "cd frontend && npm start"
   },
   "dependencies": {},
   "devDependencies": {},
-  "keywords": ["p2p", "chat", "peer", "websocket"]
+  "keywords": ["p2p", "chat", "peer", "websocket", "encrypted"]
 }
