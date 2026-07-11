@@ -14,19 +14,19 @@ Aşağıdaki yapı proje ana dizinin içini gösterir.
 - package.json- Bağımlılıklar
   
 <details>
-  <summary>🔸 Çekirdek Logosunu Göster</summary>
+  <summary style="color: #ff5500; cursor: pointer; font-weight: bold;">🔹 Çekirdek Logosunu Göster</summary>
   <br>
   <img width="60" src="https://github.com/user-attachments/assets/25fa0d07-f8bf-4ba3-baac-a14cdc5d11b4" />
 </details>
 
 <details>
-  <summary>🔸 Giriş Ekranı Görselini Göster</summary>
+  <summary style="color: #ff5500; cursor: pointer; font-weight: bold;">🔹 Giriş Ekranı Görselini Göster</summary>
   <br>
   <img width="500" src="https://github.com/user-attachments/assets/0493f3bf-6ef7-4476-ac2f-3e99f638f201" />
 </details>
 
 <details>
-  <summary>🔸 Sohbet Ekranı Görselini Göster</summary>
+  <summary style="color: #ff5500; cursor: pointer; font-weight: bold;">🔹 Sohbet Ekranı Görselini Göster</summary>
   <br>
   <img width="500" src="https://github.com/user-attachments/assets/142e3fce-ba32-4f27-bd65-2a6d35054941" />
 </details>
