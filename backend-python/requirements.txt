@@ -1,0 +1,2 @@
+twisted>=22.0.0
+autobahn>=22.0.0
