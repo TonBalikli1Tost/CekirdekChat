@@ -1,5 +1,0 @@
-const { contextBridge } = require('electron');
-
-contextBridge.exposeInMainWorld('appInfo', {
-  name: 'Çekirdek Chat',
-});
