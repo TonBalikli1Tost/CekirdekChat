@@ -13,13 +13,20 @@ Aşağıdaki yapı proje ana dizinin içini gösterir.
 - app.json    - Uygulama yapılandırması
 - package.json- Bağımlılıklar
   
-<p align="center">
-  <h3>CekirdekChat</h3>
+<details>
+  <summary>🔸 Çekirdek Logosunu Göster</summary>
   <br>
-  <!-- Küçük Logo -->
   <img width="60" src="https://github.com/user-attachments/assets/25fa0d07-f8bf-4ba3-baac-a14cdc5d11b4" />
-  <br><br><br>
-  <!-- İşaretlediğin İki Ekran Görüntüsü -->
-  <img width="350" src="Screenshot 2026-07-11 224255.png" alt="Giriş Ekranı" style="margin-right: 10px;" />
-  <img width="350" src="Screenshot 2026-07-12 012158.png" alt="Sohbet Ekranı" />
-</p>
+</details>
+
+<details>
+  <summary>🔸 Giriş Ekranı Görselini Göster</summary>
+  <br>
+  <img width="500" src="https://github.com/user-attachments/assets/0493f3bf-6ef7-4476-ac2f-3e99f638f201" />
+</details>
+
+<details>
+  <summary>🔸 Sohbet Ekranı Görselini Göster</summary>
+  <br>
+  <img width="500" src="https://github.com/user-attachments/assets/142e3fce-ba32-4f27-bd65-2a6d35054941" />
+</details>
