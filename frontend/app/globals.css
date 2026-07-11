@@ -174,4 +174,67 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Floating logo used across app */
+  .floating-logo {
+    position: fixed;
+    bottom: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    z-index: 9999;
+  }
+
+  /* Chat layout responsive tweaks */
+  .cekirdek-chat-root aside:first-of-type {
+    /* left sidebar (channels) */
+  }
+
+  @media (max-width: 940px) {
+    /* collapse left sidebar on narrow screens */
+    .cekirdek-chat-root > aside:first-of-type {
+      display: none !important;
+      width: 0 !important;
+      min-width: 0 !important;
+      overflow: hidden !important;
+    }
+
+    /* header wrap for small widths */
+    .cekirdek-chat-root header {
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .cekirdek-chat-root header .ml-auto {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* make main chat full width */
+    .cekirdek-chat-root > div.flex.min-w-0 {
+      width: 100% !important;
+    }
+
+    /* reduce paddings for narrow screens */
+    .cekirdek-chat-root .px-4 { padding-left: 12px !important; padding-right: 12px !important; }
+    .cekirdek-chat-root .py-4 { padding-top: 12px !important; padding-bottom: 12px !important; }
+  }
+
+  @media (max-width: 420px) {
+    .floating-logo {
+      width: 34px;
+      height: 34px;
+      bottom: 10px;
+      right: 10px;
+      border-radius: 8px;
+    }
+
+    /* Ensure input controls are reachable above keyboard on mobile */
+    .cekirdek-chat-root .px-4.pb-4 { padding-bottom: 80px !important; }
+  }
 }
+

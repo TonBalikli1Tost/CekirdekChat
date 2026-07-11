@@ -48,7 +48,7 @@ export function CekirdekApp() {
     return (
       <div className="relative">
         <JoinScreen onJoin={handleJoin} />
-        <img src={LOGO_DATA_URI} alt="Çekirdek logo" style={{ position: 'fixed', bottom: 12, right: 12, width: 40, height: 40, borderRadius: 8, boxShadow: '0 6px 18px rgba(0,0,0,0.5)', zIndex: 9999 }} />
+        <img src={LOGO_DATA_URI} alt="Çekirdek logo" className="floating-logo" />
       </div>
     )
   }
@@ -63,7 +63,7 @@ export function CekirdekApp() {
             <span className="text-dc-brand font-medium">#{currentChannel}</span> kanalına bağlanıyor…
           </p>
         </div>
-        <img src={LOGO_DATA_URI} alt="Çekirdek logo" style={{ position: 'fixed', bottom: 12, right: 12, width: 40, height: 40, borderRadius: 8, boxShadow: '0 6px 18px rgba(0,0,0,0.5)', zIndex: 9999 }} />
+        <img src={LOGO_DATA_URI} alt="Çekirdek logo" className="floating-logo" />
       </div>
     )
   }

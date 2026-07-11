@@ -133,9 +133,9 @@ export function ChatRoom({
   }
 
   return (
-    <div className="flex h-dvh bg-dc-bg text-dc-text relative">
+    <div className="cekirdek-chat-root flex h-dvh bg-dc-bg text-dc-text relative">
       {/* floating logo */}
-      <img src={LOGO_DATA_URI} alt="Çekirdek logo" style={{ position: 'fixed', bottom: 12, right: 12, width: 40, height: 40, borderRadius: 8, boxShadow: '0 6px 18px rgba(0,0,0,0.5)', zIndex: 9999 }} />
+      <img src={LOGO_DATA_URI} alt="Çekirdek logo" className="floating-logo" />
       {/* ── Sol sidebar ── */}
       <aside className="flex w-60 shrink-0 flex-col bg-dc-sidebar">
         {/* Sunucu başlığı */}
