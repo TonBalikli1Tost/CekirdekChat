@@ -78,3 +78,5 @@ cekirdek-chat-source.zip
 # yarn.lock
 
 
+.vercel
+.env*
